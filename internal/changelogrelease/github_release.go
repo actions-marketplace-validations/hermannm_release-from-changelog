@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 
+	"hermannm.dev/errclose"
 	"hermannm.dev/wrap"
 	"hermannm.dev/wrap/ctxwrap"
 )
@@ -25,7 +26,7 @@ func (client GitHubApiClient) createRelease(
 	repoName string,
 	repoOwner string,
 	authToken string,
-) (CreatedRelease, error) {
+) (release CreatedRelease, returnedErr error) {
 	url := fmt.Sprintf("%s/repos/%s/%s/releases", client.apiURL, repoOwner, repoName)
 
 	requestBody := CreateReleaseRequest{
@@ -62,7 +63,7 @@ func (client GitHubApiClient) createRelease(
 	if err != nil {
 		return CreatedRelease{}, wrap.Error(err, "Failed to send create release request to GitHub")
 	}
-	defer response.Body.Close()
+	defer errclose.Close(response.Body, &returnedErr, "GitHub response body")
 
 	if !isSuccessResponse(response) {
 		return CreatedRelease{}, ctxwrap.NewErrorWithAttrs(
