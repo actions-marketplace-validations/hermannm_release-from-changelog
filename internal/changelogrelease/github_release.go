@@ -13,12 +13,12 @@ import (
 	"hermannm.dev/wrap/ctxwrap"
 )
 
-type GitHubApiClient struct {
+type GitHubAPIClient struct {
 	httpClient *http.Client
 	apiURL     string
 }
 
-func (client GitHubApiClient) createRelease(
+func (client GitHubAPIClient) createRelease(
 	ctx context.Context,
 	tagName string,
 	releaseTitle string,
@@ -34,7 +34,7 @@ func (client GitHubApiClient) createRelease(
 		Name:    releaseTitle,
 		Body:    changelog,
 	}
-	requestBodyJson, err := json.Marshal(requestBody)
+	requestBodyJSON, err := json.Marshal(requestBody)
 	if err != nil {
 		return CreatedRelease{}, wrap.Error(
 			err,
@@ -46,20 +46,22 @@ func (client GitHubApiClient) createRelease(
 		ctx,
 		http.MethodPost,
 		url,
-		bytes.NewBuffer(requestBodyJson),
+		bytes.NewBuffer(requestBodyJSON),
 	)
 	if err != nil {
 		return CreatedRelease{}, wrap.Error(err, "Failed to create GitHub release HTTP request")
 	}
 	request.Header.Add("Authorization", "Bearer "+authToken)
 	// GitHub API requires sending a User-Agent header, and they recommend setting it to your GitHub
-	// username: https://docs.github.com/en/rest/using-the-rest-api/getting-started-with-the-rest-api#user-agent
+	// username:
+	// https://docs.github.com/en/rest/using-the-rest-api/getting-started-with-the-rest-api#user-agent
 	// In this case, that will be the repo owner.
 	request.Header.Add("User-Agent", repoOwner)
 	request.Header.Add("Accept", "application/vnd.github+json")
+	//nolint:canonicalheader // GitHub uses this capitalization in their API docs
 	request.Header.Add("X-GitHub-Api-Version", "2022-11-28")
 
-	response, err := http.DefaultClient.Do(request)
+	response, err := http.DefaultClient.Do(request) //nolint:bodyclose // Closed by errclose below
 	if err != nil {
 		return CreatedRelease{}, wrap.Error(err, "Failed to send create release request to GitHub")
 	}
@@ -95,6 +97,7 @@ type CreateReleaseRequest struct {
 }
 
 type CreateReleaseResponse struct {
+	//nolint:staticcheck // ST1003 - HTMLURL looks ugly
 	HtmlURL string `json:"html_url"`
 }
 

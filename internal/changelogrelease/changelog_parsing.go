@@ -9,10 +9,14 @@ import (
 	"slices"
 	"strings"
 
+	"hermannm.dev/errclose"
 	"hermannm.dev/wrap"
 )
 
-func getChangelogEntry(changelogPath string, versionToFind string) (string, error) {
+func getChangelogEntry(
+	changelogPath string,
+	versionToFind string,
+) (changelogEntry string, returnedErr error) {
 	absolutePath, err := filepath.Abs(changelogPath)
 	if err != nil {
 		return "", wrap.Errorf(
@@ -23,7 +27,7 @@ func getChangelogEntry(changelogPath string, versionToFind string) (string, erro
 	if err != nil {
 		return "", wrap.Errorf(err, "Failed to open changelog file at path '%s'", changelogPath)
 	}
-	defer file.Close()
+	defer errclose.Closef(file, &returnedErr, "changelog file at path '%s'", changelogPath)
 
 	var entryLines []string
 	foundEntry := false
@@ -69,7 +73,9 @@ func getChangelogEntry(changelogPath string, versionToFind string) (string, erro
 	if !foundEntry {
 		return "", fmt.Errorf(
 			"No changelog entry found for version '%s' in changelog file '%s' (looking for titles starting with one of: %v)",
-			versionToFind, changelogPath, strings.Join(targetTitles, ", "),
+			versionToFind,
+			changelogPath,
+			strings.Join(targetTitles, ", "),
 		)
 	}
 
@@ -117,8 +123,8 @@ func changelogEntryEnded(line string) bool {
 }
 
 // Regex:
-// - Leading ^ to match beginning of line
-// - \[ and \] to match square brackets around link text
-// - [^\[\]]+ to match link text: all characters _except_ [ or ]
-// - : to match trailing colon
+// - Leading ^ to match beginning of line.
+// - \[ and \] to match square brackets around link text.
+// - [^\[\]]+ to match link text: all characters _except_ [ or ].
+// - : to match trailing colon.
 var tagLinkRegex = regexp.MustCompile(`^\[[^\[\]]+\]:`)

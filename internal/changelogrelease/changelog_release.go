@@ -42,7 +42,7 @@ func CreateGitHubReleaseForChangelogEntry(
 		return CreatedRelease{}, wrap.Error(err, "Failed to get changelog entry")
 	}
 
-	githubClient := GitHubApiClient{httpClient: httpClient, apiURL: input.ApiURL}
+	githubClient := GitHubAPIClient{httpClient: httpClient, apiURL: input.ApiURL}
 	release, err := githubClient.createRelease(
 		ctx,
 		input.TagName,
@@ -73,12 +73,12 @@ func validateTagName(tagName string) error {
 }
 
 // Regex:
-// - Leading ^ and trailing $, so we always match the full string
-// - \d+ to match at least 1 digit
-// - \. to match dots between digits
+// - Leading ^ and trailing $, so we always match the full string.
+// - \d+ to match at least 1 digit.
+// - \. to match dots between digits.
 var semanticVersioningRegex = regexp.MustCompile(`^[0-9]+\.[0-9]+\.[0-9]+$`)
 
-// Implements [slog.LogValuer].
+// LogValue implements [slog.LogValuer].
 func (release CreatedRelease) LogValue() slog.Value {
 	return slog.GroupValue(
 		slog.String("name", release.Name),

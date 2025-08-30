@@ -1,7 +1,6 @@
 package changelogrelease
 
 import (
-	"os"
 	"sync"
 	"testing"
 )
@@ -69,29 +68,19 @@ func setTestEnv(
 	envVars map[string]string,
 	testFunc func(),
 ) {
+	t.Helper()
+
+	// Environment variables are global, so we acquire a lock to ensure that only one env test runs
+	// at the same time
 	testEnvLock.Lock()
 	defer testEnvLock.Unlock()
 
-	previousValues := make(map[string]string, len(envVars))
-
 	for key, value := range envVars {
-		previousValues[key] = os.Getenv(key) // Returns "" if not set
-
-		err := os.Setenv(key, value)
-		assertNilError(t, err)
+		// testing.T.Setenv restores the previous value after the test
+		t.Setenv(key, value)
 	}
 
 	testFunc()
-
-	for key, previousValue := range previousValues {
-		if previousValue != "" {
-			err := os.Setenv(key, previousValue)
-			assertNilError(t, err)
-		} else {
-			err := os.Unsetenv(key)
-			assertNilError(t, err)
-		}
-	}
 }
 
 var testEnvLock = new(sync.Mutex)

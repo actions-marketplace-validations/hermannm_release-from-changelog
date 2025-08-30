@@ -8,8 +8,9 @@ import (
 
 	"hermannm.dev/devlog"
 	"hermannm.dev/devlog/log"
-	"hermannm.dev/release-from-changelog/internal/changelogrelease"
 	"hermannm.dev/wrap"
+
+	"hermannm.dev/release-from-changelog/internal/changelogrelease"
 )
 
 func main() {

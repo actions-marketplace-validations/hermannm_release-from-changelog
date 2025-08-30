@@ -13,7 +13,7 @@ type ActionInput struct {
 	RepoName          string
 	RepoOwner         string
 	AuthToken         string
-	ApiURL            string
+	ApiURL            string //nolint:staticcheck // ST1003 - APIURL is ugly
 }
 
 func ActionInputFromEnv() (ActionInput, error) {
@@ -32,7 +32,7 @@ func ActionInputFromEnv() (ActionInput, error) {
 		return ActionInput{}, err
 	}
 
-	apiUrl, err := getRequiredEnvVar("GITHUB_API_URL")
+	apiURL, err := getRequiredEnvVar("GITHUB_API_URL")
 	if err != nil {
 		return ActionInput{}, err
 	}
@@ -44,7 +44,7 @@ func ActionInputFromEnv() (ActionInput, error) {
 		RepoName:          repoName,
 		RepoOwner:         repoOwner,
 		AuthToken:         authToken,
-		ApiURL:            apiUrl,
+		ApiURL:            apiURL,
 	}, nil
 }
 
