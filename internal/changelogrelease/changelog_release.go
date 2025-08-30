@@ -25,8 +25,17 @@ func CreateGitHubReleaseForChangelogEntry(
 		return CreatedRelease{}, err
 	}
 
-	releaseTitle := input.ReleaseTitle.GetOrDefault(input.TagName)
-	changelogPath := input.ChangelogFilePath.GetOrDefault("CHANGELOG.md")
+	// If release title is not provided, default to tag name
+	releaseTitle := input.ReleaseTitle
+	if releaseTitle == "" {
+		releaseTitle = input.TagName
+	}
+
+	// If changelog file path is not provided, default to CHANGELOG.md (root of repo)
+	changelogPath := input.ChangelogFilePath
+	if changelogPath == "" {
+		changelogPath = "CHANGELOG.md"
+	}
 
 	changelog, err := getChangelogEntry(changelogPath, input.TagName)
 	if err != nil {

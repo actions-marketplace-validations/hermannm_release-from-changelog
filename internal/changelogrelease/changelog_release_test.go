@@ -6,8 +6,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-
-	"hermannm.dev/opt"
 )
 
 func TestCreateGitHubReleaseForChangelogEntry(t *testing.T) {
@@ -34,8 +32,8 @@ func TestCreateGitHubReleaseForChangelogEntry(t *testing.T) {
 		context.Background(),
 		ActionInput{
 			TagName:           "v0.4.0",
-			ReleaseTitle:      opt.Empty[string](),
-			ChangelogFilePath: opt.Value("testdata/CHANGELOG_1.md"),
+			ReleaseTitle:      "",
+			ChangelogFilePath: "testdata/CHANGELOG_1.md",
 			RepoName:          "gruvbox-plain",
 			RepoOwner:         "hermannm",
 			AuthToken:         token,

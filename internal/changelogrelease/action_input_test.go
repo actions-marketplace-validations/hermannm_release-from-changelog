@@ -4,8 +4,6 @@ import (
 	"os"
 	"sync"
 	"testing"
-
-	"hermannm.dev/opt"
 )
 
 func TestActionInputFromEnv(t *testing.T) {
@@ -26,8 +24,8 @@ func TestActionInputFromEnv(t *testing.T) {
 
 			expected := ActionInput{
 				TagName:           "v0.4.0",
-				ReleaseTitle:      opt.Value("Release 0.4.0"),
-				ChangelogFilePath: opt.Value("dir/CHANGELOG.md"),
+				ReleaseTitle:      "Release 0.4.0",
+				ChangelogFilePath: "dir/CHANGELOG.md",
 				RepoName:          "release-from-changelog",
 				RepoOwner:         "hermannm",
 				AuthToken:         "test-token",
@@ -54,8 +52,8 @@ func TestOptionalInputsAndFallback(t *testing.T) {
 
 			expected := ActionInput{
 				TagName:           "v0.3.0",
-				ReleaseTitle:      opt.Empty[string](),
-				ChangelogFilePath: opt.Empty[string](),
+				ReleaseTitle:      "",
+				ChangelogFilePath: "",
 				RepoName:          "release-from-changelog",
 				RepoOwner:         "hermannm",
 				AuthToken:         "test-token",
@@ -74,25 +72,19 @@ func setTestEnv(
 	testEnvLock.Lock()
 	defer testEnvLock.Unlock()
 
-	previousValues := make(map[string]opt.Option[string], len(envVars))
+	previousValues := make(map[string]string, len(envVars))
 
 	for key, value := range envVars {
-		previousValue := os.Getenv(key)
+		previousValues[key] = os.Getenv(key) // Returns "" if not set
 
 		err := os.Setenv(key, value)
 		assertNilError(t, err)
-
-		if previousValue == "" {
-			previousValues[key] = opt.Empty[string]()
-		} else {
-			previousValues[key] = opt.Value(previousValue)
-		}
 	}
 
 	testFunc()
 
 	for key, previousValue := range previousValues {
-		if previousValue, ok := previousValue.Get(); ok {
+		if previousValue != "" {
 			err := os.Setenv(key, previousValue)
 			assertNilError(t, err)
 		} else {

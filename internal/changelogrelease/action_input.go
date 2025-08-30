@@ -4,14 +4,12 @@ import (
 	"fmt"
 	"os"
 	"strings"
-
-	"hermannm.dev/opt"
 )
 
 type ActionInput struct {
 	TagName           string
-	ReleaseTitle      opt.Option[string]
-	ChangelogFilePath opt.Option[string]
+	ReleaseTitle      string // Blank if release title was not provided.
+	ChangelogFilePath string // Blank if changelog file path was not provided.
 	RepoName          string
 	RepoOwner         string
 	AuthToken         string
@@ -41,8 +39,8 @@ func ActionInputFromEnv() (ActionInput, error) {
 
 	return ActionInput{
 		TagName:           tagName,
-		ReleaseTitle:      getOptionalEnvVar("INPUT_RELEASE_TITLE"),
-		ChangelogFilePath: getOptionalEnvVar("INPUT_CHANGELOG_PATH"),
+		ReleaseTitle:      os.Getenv("INPUT_RELEASE_TITLE"),  // Returns blank if env var is not set
+		ChangelogFilePath: os.Getenv("INPUT_CHANGELOG_PATH"), // Returns blank if env var is not set
 		RepoName:          repoName,
 		RepoOwner:         repoOwner,
 		AuthToken:         authToken,
@@ -51,8 +49,8 @@ func ActionInputFromEnv() (ActionInput, error) {
 }
 
 func getTagNameFromEnv() (string, error) {
-	tagName, ok := getOptionalEnvVar("INPUT_TAG_NAME").Get()
-	if !ok {
+	tagName := os.Getenv("INPUT_TAG_NAME")
+	if tagName == "" {
 		tagRef, err := getRequiredEnvVar("GITHUB_REF")
 		if err != nil {
 			return "", err
@@ -93,12 +91,4 @@ func getRequiredEnvVar(name string) (value string, err error) {
 		return "", fmt.Errorf("Expected '%s' environment variable to be set", name)
 	}
 	return value, nil
-}
-
-func getOptionalEnvVar(name string) opt.Option[string] {
-	value := os.Getenv(name)
-	if value == "" {
-		return opt.Empty[string]()
-	}
-	return opt.Value(value)
 }
