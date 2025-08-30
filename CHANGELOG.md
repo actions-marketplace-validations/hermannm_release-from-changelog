@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.2.5] - 2025-08-31
+
+- Fix cleanup of response body after GitHub request
+- Remove dependency on `opt` package
+
 ## [v0.2.4] - 2025-08-28
 
 - Improve error log on unsuccessful response from GitHub

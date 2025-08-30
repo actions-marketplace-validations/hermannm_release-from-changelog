@@ -33,7 +33,7 @@ inputs:
 
 runs:
   using: 'docker'
-  image: 'docker://ghcr.io/hermannm/release-from-changelog:v0.2.4'
+  image: 'docker://ghcr.io/hermannm/release-from-changelog:v0.2.5'
   env:
     INPUT_TOKEN: ${{ inputs.token }}
     INPUT_TAG_NAME: ${{ inputs.tag_name }}

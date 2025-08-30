@@ -45,7 +45,7 @@ jobs:
       # Creates GitHub release from CHANGELOG.md entry for the pushed tag
       # https://github.com/hermannm/release-from-changelog
       - name: Create release from changelog
-        uses: hermannm/release-from-changelog@v0.2.4
+        uses: hermannm/release-from-changelog@v0.2.5
 ```
 <!-- @formatter:on -->
 
@@ -57,7 +57,7 @@ You can customize the action with various inputs:
 <!-- @formatter:off -->
 ```yaml
 - name: Create release from changelog
-  uses: hermannm/release-from-changelog@v0.2.4
+  uses: hermannm/release-from-changelog@v0.2.5
   with:
     # GitHub auth token to use for creating the release.
     # Uses the default `github.token` if not specified.
@@ -95,9 +95,9 @@ As such, this action is originally designed for my own use. But feel free to use
 
 When publishing a new release:
 
-- Run tests:
+- Run tests and linter ([`golangci-lint`](https://golangci-lint.run/)):
   ```
-  go test ./...
+  go test ./... && golangci-lint run
   ```
 - Bump the `runs.image` version in `action.yml`
 - Bump the version used in the examples under [Usage](#usage) in the README
