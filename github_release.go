@@ -61,7 +61,7 @@ func (client GitHubAPIClient) createRelease(
 	//nolint:canonicalheader // GitHub uses this capitalization in their API docs
 	request.Header.Add("X-GitHub-Api-Version", "2022-11-28")
 
-	response, err := http.DefaultClient.Do(request) //nolint:bodyclose // Closed by errclose below
+	response, err := client.httpClient.Do(request) //nolint:bodyclose // Closed by errclose below
 	if err != nil {
 		return CreatedRelease{}, wrap.Error(err, "Failed to send create release request to GitHub")
 	}
