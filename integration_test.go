@@ -27,6 +27,7 @@ func TestCreateGitHubReleaseForChangelogEntry(t *testing.T) {
 			assertNilError(t, err)
 		},
 	)
+	defer githubServer.Close()
 
 	release, err := createGitHubReleaseForChangelogEntry(
 		context.Background(),
