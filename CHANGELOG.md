@@ -67,7 +67,9 @@
 
 - Initial implementation of changelog parsing and GitHub release creation
 
-[Unreleased]: https://github.com/hermannm/release-from-changelog/compare/v0.2.4...HEAD
+[Unreleased]: https://github.com/hermannm/release-from-changelog/compare/v0.2.5...HEAD
+
+[v0.2.5]: https://github.com/hermannm/release-from-changelog/compare/v0.2.4...v0.2.5
 
 [v0.2.4]: https://github.com/hermannm/release-from-changelog/compare/v0.2.3...v0.2.4
 
