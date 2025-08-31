@@ -1,4 +1,4 @@
-package changelogrelease
+package main
 
 import (
 	"fmt"
@@ -16,7 +16,7 @@ type ActionInput struct {
 	ApiURL            string //nolint:staticcheck // ST1003 - APIURL is ugly
 }
 
-func ActionInputFromEnv() (ActionInput, error) {
+func actionInputFromEnv() (ActionInput, error) {
 	tagName, err := getTagNameFromEnv()
 	if err != nil {
 		return ActionInput{}, err

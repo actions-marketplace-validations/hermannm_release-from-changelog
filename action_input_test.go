@@ -1,4 +1,4 @@
-package changelogrelease
+package main
 
 import (
 	"sync"
@@ -18,7 +18,7 @@ func TestActionInputFromEnv(t *testing.T) {
 			"GITHUB_API_URL":       "https://api.github.com",
 		},
 		func() {
-			input, err := ActionInputFromEnv()
+			input, err := actionInputFromEnv()
 			assertNilError(t, err)
 
 			expected := ActionInput{
@@ -46,7 +46,7 @@ func TestOptionalInputsAndFallback(t *testing.T) {
 			"GITHUB_API_URL":    "https://api.github.com",
 		},
 		func() {
-			input, err := ActionInputFromEnv()
+			input, err := actionInputFromEnv()
 			assertNilError(t, err)
 
 			expected := ActionInput{

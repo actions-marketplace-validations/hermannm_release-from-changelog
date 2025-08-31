@@ -1,4 +1,4 @@
-package changelogrelease
+package main
 
 import (
 	"bufio"
@@ -127,4 +127,4 @@ func changelogEntryEnded(line string) bool {
 // - \[ and \] to match square brackets around link text.
 // - [^\[\]]+ to match link text: all characters _except_ [ or ].
 // - : to match trailing colon.
-var tagLinkRegex = regexp.MustCompile(`^\[[^\[\]]+\]:`)
+var tagLinkRegex = regexp.MustCompile(`^\[[^\[\]]+]:`)

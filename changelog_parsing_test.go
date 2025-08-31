@@ -1,4 +1,4 @@
-package changelogrelease
+package main
 
 import (
 	"testing"
@@ -43,7 +43,7 @@ func TestChangelogEntryAtEndOfFileWithLinks(t *testing.T) {
 func TestChangelogFromThisProject(t *testing.T) {
 	assertChangelogEntry(
 		t,
-		"../../CHANGELOG.md",
+		"CHANGELOG.md",
 		"v0.1.0",
 		"- Initial implementation of changelog parsing and GitHub release creation",
 	)

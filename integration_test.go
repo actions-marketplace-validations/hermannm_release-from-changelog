@@ -1,4 +1,4 @@
-package changelogrelease
+package main
 
 import (
 	"context"
@@ -28,14 +28,14 @@ func TestCreateGitHubReleaseForChangelogEntry(t *testing.T) {
 		},
 	)
 
-	release, err := CreateGitHubReleaseForChangelogEntry(
+	release, err := createGitHubReleaseForChangelogEntry(
 		context.Background(),
 		ActionInput{
 			TagName:           "v0.4.0",
 			ReleaseTitle:      "",
 			ChangelogFilePath: "testdata/CHANGELOG_1.md",
 			RepoName:          "gruvbox-plain",
-			RepoOwner:         "hermannm",
+			RepoOwner:         repoOwner,
 			AuthToken:         token,
 			ApiURL:            githubServer.URL,
 		},

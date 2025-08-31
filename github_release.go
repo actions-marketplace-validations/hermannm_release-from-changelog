@@ -1,4 +1,4 @@
-package changelogrelease
+package main
 
 import (
 	"bytes"
