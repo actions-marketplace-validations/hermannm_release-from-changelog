@@ -7,7 +7,7 @@ GitHub Action for creating a GitHub release from a `CHANGELOG.md` entry on the
 
 - [Usage](#usage)
 - [Why another action?](#why-another-action)
-- [Developer's guide](#developers-guide)
+- [Maintainer's guide](#maintainers-guide)
 
 ## Usage
 
@@ -91,9 +91,9 @@ it in Docker instead of downloading a raw binary in the action.
 
 As such, this action is originally designed for my own use. But feel free to use it yourself!
 
-## Developer's guide
+## Maintainer's guide
 
-When publishing a new release:
+### Publishing a new release
 
 - Run tests and linter ([`golangci-lint`](https://golangci-lint.run/)):
   ```
