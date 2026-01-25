@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.2.6] - 2026-01-25
+
+- Remove single linebreaks inside paragraphs from changelog descriptions before sending to GitHub
+    - This improves formatting of descriptions in GitHub's release view
+
 ## [v0.2.5] - 2025-08-31
 
 - Fix cleanup of response body after GitHub request
@@ -67,7 +72,9 @@
 
 - Initial implementation of changelog parsing and GitHub release creation
 
-[Unreleased]: https://github.com/hermannm/release-from-changelog/compare/v0.2.5...HEAD
+[Unreleased]: https://github.com/hermannm/release-from-changelog/compare/v0.2.6...HEAD
+
+[v0.2.6]: https://github.com/hermannm/release-from-changelog/compare/v0.2.5...v0.2.6
 
 [v0.2.5]: https://github.com/hermannm/release-from-changelog/compare/v0.2.4...v0.2.5
 

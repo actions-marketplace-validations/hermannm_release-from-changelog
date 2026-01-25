@@ -45,7 +45,7 @@ jobs:
       # Creates GitHub release from CHANGELOG.md entry for the pushed tag
       # https://github.com/hermannm/release-from-changelog
       - name: Create release from changelog
-        uses: hermannm/release-from-changelog@v0.2.5
+        uses: hermannm/release-from-changelog@v0.2.6
 ```
 <!-- @formatter:on -->
 
@@ -57,7 +57,7 @@ You can customize the action with various inputs:
 <!-- @formatter:off -->
 ```yaml
 - name: Create release from changelog
-  uses: hermannm/release-from-changelog@v0.2.5
+  uses: hermannm/release-from-changelog@v0.2.6
   with:
     # GitHub auth token to use for creating the release.
     # Uses the default `github.token` if not specified.

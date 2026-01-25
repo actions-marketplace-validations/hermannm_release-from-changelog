@@ -100,4 +100,4 @@ jobs:
         uses: actions/checkout@v5
       # We use our own action here, for dogfooding
       - name: Create release from changelog
-        uses: hermannm/release-from-changelog@v0.2.4
+        uses: hermannm/release-from-changelog@v0.2.5
