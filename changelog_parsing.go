@@ -83,12 +83,16 @@ func getChangelogEntry(
 	for i, line := range slices.Backward(entryLines) {
 		if line == "" {
 			entryLines = slices.Delete(entryLines, i, i+1)
+		} else {
+			break
 		}
 	}
 
 	if len(entryLines) == 0 {
 		return "", fmt.Errorf("Changelog entry for version '%s' was empty", versionToFind)
 	}
+
+	entryLines = removeParagraphLinebreaks(entryLines)
 
 	return strings.Join(entryLines, "\n"), nil
 }
@@ -128,3 +132,91 @@ func changelogEntryEnded(line string) bool {
 // - [^\[\]]+ to match link text: all characters _except_ [ or ].
 // - : to match trailing colon.
 var tagLinkRegex = regexp.MustCompile(`^\[[^\[\]]+]:`)
+
+// We typically format changelog files with a max line length, with line breaks to break up long
+// paragraphs. In most Markdown renderers, such single linebreaks in the middle of a paragraph will
+// not show up when rendered, as the paragraph will just continue on. But GitHub's rendering of
+// release descriptions actually shows these linebreaks, which is annoying. So we strip away single
+// line breaks from changelog descriptions (but keep double linebreaks, linebreaks between list
+// items and in code blocks, and around comments).
+func removeParagraphLinebreaks(lines []string) []string {
+	newLines := make([]string, 0, len(lines))
+
+	isInCodeBlock := false
+	for _, line := range lines {
+		if len(newLines) == 0 {
+			newLines = append(newLines, line)
+			continue
+		}
+
+		previousLineIndex := len(newLines) - 1
+		previousLine := newLines[previousLineIndex]
+
+		firstWord, indentLength, ok := getFirstWord(line)
+		if !ok {
+			newLines = append(newLines, line)
+			continue
+		}
+
+		// Don't remove line breaks between list items, or around a comment
+		if firstWord == "-" ||
+			numberedListRegex.MatchString(firstWord) ||
+			firstWord == "<!--" ||
+			strings.HasSuffix(previousLine, "-->") {
+			newLines = append(newLines, line)
+			continue
+		}
+
+		if strings.HasPrefix(firstWord, "```") {
+			isInCodeBlock = !isInCodeBlock
+			newLines = append(newLines, line)
+			continue
+		}
+		// If we're in a code block, then we don't want to remove line breaks
+		if isInCodeBlock {
+			newLines = append(newLines, line)
+			continue
+		}
+
+		if previousLine == "" {
+			newLines = append(newLines, line)
+			continue
+		}
+
+		newLines[previousLineIndex] = previousLine + " " + line[indentLength:]
+	}
+
+	return newLines
+}
+
+func getFirstWord(line string) (word string, indentLength int, ok bool) {
+	chars := []rune(line)
+
+	var startIndex, endIndex int
+	var startFound, endFound bool
+	for i, char := range chars {
+		if !startFound && char != ' ' {
+			startIndex = i
+			startFound = true
+			continue
+		}
+
+		if startFound && char == ' ' {
+			endIndex = i
+			endFound = true
+			break
+		}
+	}
+
+	if !startFound {
+		return "", 0, false
+	}
+	if !endFound {
+		endIndex = len(chars)
+	}
+
+	return string(chars[startIndex:endIndex]), startIndex, true
+}
+
+// Matches Markdown numbered list items ("1.", "2.", "10." etc.).
+var numberedListRegex = regexp.MustCompile(`\d+\.`)
